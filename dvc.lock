@@ -1,0 +1,134 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python src/pipeline/prepare.py
+    deps:
+    - path: data/raw/ml-100k/u.data
+      hash: md5
+      md5: 6e47046882bad158b0efbb84cd5cb987
+      size: 1979173
+    - path: data/raw/ml-100k/u.item
+      hash: md5
+      md5: c9e7f390115d79079537301d5204f3f7
+      size: 236344
+    - path: data/raw/ml-100k/u.user
+      hash: md5
+      md5: 1b53539edc13caad0282c8500608a319
+      size: 22628
+    - path: src/data/loader.py
+      hash: md5
+      md5: 1df58220d3d3c934985a545f7d7d4cd2
+      size: 7192
+    - path: src/pipeline/prepare.py
+      hash: md5
+      md5: c2dffb9fe049d2bf0f74edfb3beddad6
+      size: 3749
+    outs:
+    - path: data/baselines/genre_baseline.json
+      hash: md5
+      md5: a438d149995e8bd02a920774af16047c
+      size: 933
+    - path: data/processed/movies.parquet
+      hash: md5
+      md5: 468c59c8c0a0ae45f44bb9560884e70a
+      size: 65214
+    - path: data/processed/profiles.parquet
+      hash: md5
+      md5: 3a17773c239ed5a6847d90f40780a57c
+      size: 137217
+    - path: data/processed/test_ratings.parquet
+      hash: md5
+      md5: b48bf8a004f0dced12116d700a5e6700
+      size: 131517
+    - path: data/processed/train_ratings.parquet
+      hash: md5
+      md5: 1ba57a6048b4f7e1b93eb38a052be6f3
+      size: 501846
+    - path: data/processed/users.parquet
+      hash: md5
+      md5: f96e654a6c5e6770e57f042ecd5df99b
+      size: 11916
+  train:
+    cmd: python src/pipeline/train_stage.py
+    deps:
+    - path: data/processed/movies.parquet
+      hash: md5
+      md5: 468c59c8c0a0ae45f44bb9560884e70a
+      size: 65214
+    - path: data/processed/profiles.parquet
+      hash: md5
+      md5: 3a17773c239ed5a6847d90f40780a57c
+      size: 137217
+    - path: data/processed/train_ratings.parquet
+      hash: md5
+      md5: 1ba57a6048b4f7e1b93eb38a052be6f3
+      size: 501846
+    - path: data/processed/users.parquet
+      hash: md5
+      md5: f96e654a6c5e6770e57f042ecd5df99b
+      size: 11916
+    - path: src/bandit/linucb.py
+      hash: md5
+      md5: 8150e3586137485176fd8b8cb4c1727b
+      size: 5861
+    - path: src/bandit/simulator.py
+      hash: md5
+      md5: 64d70aa05c5924aa43fce93ede36ca3d
+      size: 5621
+    - path: src/pipeline/train_stage.py
+      hash: md5
+      md5: d231c444e685c66470ab13647cc87900
+      size: 3887
+    params:
+      params.yaml:
+        train.alpha: 0.1
+        train.pool_size: 20
+        train.seed: 42
+    outs:
+    - path: metrics/train_metrics.json
+      hash: md5
+      md5: 8a4ae0018d9546f4d7fbbe2844a4c5c9
+      size: 195
+    - path: outputs/linucb_alpha0.1.pkl
+      hash: md5
+      md5: 15627193e5ae090370bc20968536bc2b
+      size: 98404922
+  evaluate:
+    cmd: python src/pipeline/evaluate_stage.py
+    deps:
+    - path: data/processed/movies.parquet
+      hash: md5
+      md5: 468c59c8c0a0ae45f44bb9560884e70a
+      size: 65214
+    - path: data/processed/test_ratings.parquet
+      hash: md5
+      md5: b48bf8a004f0dced12116d700a5e6700
+      size: 131517
+    - path: outputs/linucb_alpha0.1.pkl
+      hash: md5
+      md5: 15627193e5ae090370bc20968536bc2b
+      size: 98404922
+    - path: src/evaluation/metrics.py
+      hash: md5
+      md5: de7b61ce5e269dd15bf96c38b180cd7b
+      size: 8818
+    - path: src/pipeline/evaluate_stage.py
+      hash: md5
+      md5: cf48fe257b2e10d3355510f2b244c3b5
+      size: 4452
+    params:
+      params.yaml:
+        train.alpha: 0.1
+    outs:
+    - path: metrics/eval_metrics.json
+      hash: md5
+      md5: c3279fc1a508f83fd81259811f227923
+      size: 122
+    - path: plots/test_evaluation.png
+      hash: md5
+      md5: bab883cf475b1aabf066a1029bcb8c39
+      size: 178329
+    - path: plots/train_evaluation.png
+      hash: md5
+      md5: 06e8f02261466583d24d9dd60eeaf07c
+      size: 202779

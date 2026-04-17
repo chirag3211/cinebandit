@@ -1,0 +1,24 @@
+# CineBandit — Hyperparameters and configuration
+# All tunable values live here.
+# DVC tracks changes to these params and re-runs affected pipeline stages.
+# Change a value → dvc repro → only affected stages re-run.
+
+train:
+  alpha: 0.1          # LinUCB exploration parameter (best from tuning)
+  pool_size: 20       # Candidate pool size per recommendation step
+  seed: 42            # Random seed for reproducibility
+  max_steps: null     # null = use all data; set integer to limit
+
+data:
+  train_split: 0.8    # Fraction of data used for training
+  min_ratings: 5      # Minimum ratings for user profile computation
+  drift_threshold: 0.3  # KL divergence threshold for drift alert
+  detection_window: 5000  # Number of recent interactions for drift detection
+
+model:
+  context_dim: 60     # Dimension of context vector (fixed by feature engineering)
+  name: "CineBandit"  # MLflow model registry name
+
+api:
+  default_n_recommendations: 5
+  max_n_recommendations: 20

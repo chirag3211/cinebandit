@@ -1,0 +1,73 @@
+# CineBandit — DVC Pipeline
+# Defines the ML pipeline as a DAG of stages.
+# Run the full pipeline: dvc repro
+# Run a specific stage: dvc repro train
+#
+# Each stage tracks:
+#   deps    : inputs (code + data) — if any change, stage re-runs
+#   params  : hyperparameters from params.yaml
+#   outs    : outputs tracked and cached by DVC
+#   metrics : evaluation metrics logged to metrics.json
+#   plots   : visualisation files
+
+stages:
+
+  # ── Stage 1: Data preparation ─────────────────────────────────────────────
+  prepare:
+    cmd: python src/pipeline/prepare.py
+    deps:
+      - src/data/loader.py
+      - src/pipeline/prepare.py
+      - data/raw/ml-100k/u.data
+      - data/raw/ml-100k/u.item
+      - data/raw/ml-100k/u.user
+    outs:
+      - data/processed/train_ratings.parquet
+      - data/processed/test_ratings.parquet
+      - data/processed/movies.parquet
+      - data/processed/users.parquet
+      - data/processed/profiles.parquet
+      - data/baselines/genre_baseline.json
+
+  # ── Stage 2: Model training ────────────────────────────────────────────────
+  train:
+    cmd: python src/pipeline/train_stage.py
+    deps:
+      - src/bandit/linucb.py
+      - src/bandit/simulator.py
+      - src/pipeline/train_stage.py
+      - data/processed/train_ratings.parquet
+      - data/processed/movies.parquet
+      - data/processed/users.parquet
+      - data/processed/profiles.parquet
+    params:
+      - params.yaml:
+          - train.alpha
+          - train.pool_size
+          - train.seed
+    outs:
+      - outputs/linucb_alpha${train.alpha}.pkl
+    metrics:
+      - metrics/train_metrics.json:
+          cache: false
+
+  # ── Stage 3: Evaluation ────────────────────────────────────────────────────
+  evaluate:
+    cmd: python src/pipeline/evaluate_stage.py
+    deps:
+      - src/evaluation/metrics.py
+      - src/pipeline/evaluate_stage.py
+      - data/processed/test_ratings.parquet
+      - data/processed/movies.parquet
+      - outputs/linucb_alpha${train.alpha}.pkl
+    params:
+      - params.yaml:
+          - train.alpha
+    metrics:
+      - metrics/eval_metrics.json:
+          cache: false
+    plots:
+      - plots/train_evaluation.png:
+          cache: false
+      - plots/test_evaluation.png:
+          cache: false
