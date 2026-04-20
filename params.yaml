@@ -4,7 +4,7 @@
 # Change a value → dvc repro → only affected stages re-run.
 
 train:
-  alpha: 0.1          # LinUCB exploration parameter (best from tuning)
+  alpha: 0.5          # LinUCB exploration parameter (best from tuning)
   pool_size: 20       # Candidate pool size per recommendation step
   seed: 42            # Random seed for reproducibility
   max_steps: null     # null = use all data; set integer to limit

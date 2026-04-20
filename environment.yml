@@ -1,0 +1,66 @@
+# CineBandit — Conda environment
+#
+# ── Quick start ───────────────────────────────────────────────────────────────
+# Create:   conda env create -f environment.yml
+# Activate: conda activate cinebandit
+# Update:   conda env update -f environment.yml --prune
+#
+# After activation, install Airflow separately:
+#   pip install "apache-airflow==2.10.0" \
+#     --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.0/constraints-3.12.txt"
+#
+# NOTE: Docker is the recommended way to run the full stack.
+#       'make up' starts all services including Airflow, MLflow, Prometheus, and Grafana.
+#       This conda environment is for local development only (train, evaluate, test DAGs).
+
+name: cinebandit
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  # ── Python ──────────────────────────────────────────────────────────────────
+  - python=3.12
+
+  # ── Core ML ─────────────────────────────────────────────────────────────────
+  - numpy=2.4.2
+  - pandas=3.0.1
+  - scikit-learn=1.8.0
+
+  # ── Visualisation ────────────────────────────────────────────────────────────
+  - matplotlib=3.10.8
+  - seaborn=0.13.2
+
+  # ── Progress & utilities ─────────────────────────────────────────────────────
+  - tqdm=4.67.3
+
+  # ── DVC (data versioning) ────────────────────────────────────────────────────
+  - dvc=3.59.1
+
+  # ── pip-only packages ────────────────────────────────────────────────────────
+  - pip
+  - pip:
+    # API
+    - fastapi==0.135.2
+    - uvicorn==0.42.0
+    - pydantic==2.12.5
+    - starlette==1.0.0
+    - httpx==0.28.1
+
+    # Monitoring
+    - prometheus-client==0.24.1
+
+    # MLflow — experiment tracking + model registry
+    - mlflow==3.10.1
+    - psycopg[binary]
+
+    # Streamlit — frontend UI
+    - streamlit==1.55.0
+    - requests==2.32.3
+    - plotly==5.24.1
+
+    # Airflow — install separately with constraint file (see note above)
+    # Run this after activating the conda environment:
+    #   pip install "apache-airflow==2.10.0" \
+    #     --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.0/constraints-3.12.txt"

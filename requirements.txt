@@ -1,0 +1,54 @@
+# CineBandit — Python dependencies
+# Python 3.12
+#
+# ── Quick start ───────────────────────────────────────────────────────────────
+# 1. Create and activate a virtual environment:
+#    python3 -m venv .venv
+#    source .venv/bin/activate          # Linux / macOS / WSL2
+#    .venv\Scripts\activate             # Windows CMD
+#
+# 2. Install core dependencies:
+#    pip install -r requirements.txt
+#
+# 3. Install Airflow separately (see section below):
+#    pip install -r requirements.airflow.txt
+#
+# NOTE: Docker is the recommended way to run Airflow.
+#       Use 'make up' to start all services including Airflow in Docker.
+#       Only install Airflow locally if you need to develop/test DAGs outside Docker.
+
+# ── Core ML ───────────────────────────────────────────────────────────────────
+numpy==2.4.2
+pandas==3.0.1
+scikit-learn==1.8.0
+
+# ── Visualisation ─────────────────────────────────────────────────────────────
+matplotlib==3.10.8
+seaborn==0.13.2
+
+# ── Progress & utilities ──────────────────────────────────────────────────────
+tqdm==4.67.3
+
+# ── API ───────────────────────────────────────────────────────────────────────
+fastapi==0.135.2
+uvicorn==0.42.0
+pydantic==2.12.5
+starlette==1.0.0
+
+# ── Monitoring ────────────────────────────────────────────────────────────────
+prometheus-client==0.24.1
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+httpx==0.28.1
+
+# ── MLflow ────────────────────────────────────────────────────────────────────
+mlflow==3.10.1
+psycopg3       # MLflow postgres backend
+
+# ── Streamlit ─────────────────────────────────────────────────────────────────
+streamlit==1.55.0
+requests==2.32.3
+plotly==5.24.1
+
+# ── DVC ───────────────────────────────────────────────────────────────────────
+dvc==3.59.1

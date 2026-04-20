@@ -1,0 +1,27 @@
+# CineBandit — Airflow local dependencies
+#
+# ⚠️  RECOMMENDED: Use Docker instead (make up starts Airflow automatically)
+#
+# Only use this file if you need to run Airflow locally outside Docker,
+# for example to develop or test DAGs without Docker running.
+#
+# Airflow has a large dependency tree that can conflict with other packages.
+# Always install it in a fresh virtual environment or after requirements.txt.
+#
+# Install with the official constraint file to avoid dependency conflicts:
+#
+#   pip install "apache-airflow==2.10.0" \
+#     --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.10.0/constraints-3.12.txt"
+#
+# After installation, initialise the database:
+#   export AIRFLOW_HOME=~/airflow
+#   airflow db migrate
+#   airflow users create --username admin --password admin \
+#     --firstname Admin --lastname User --role Admin \
+#     --email admin@cinebandit.local
+#
+# Then start webserver and scheduler in separate terminals:
+#   airflow webserver --port 8080
+#   airflow scheduler
+
+apache-airflow==2.10.0
