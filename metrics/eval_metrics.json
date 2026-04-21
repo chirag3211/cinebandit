@@ -1,0 +1,7 @@
+{
+  "test_ctr": 0.6334,
+  "genre_diversity": 3.6213,
+  "arm_coverage": 1.0,
+  "test_steps": 2444,
+  "total_reward": 1548
+}

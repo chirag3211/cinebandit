@@ -1,0 +1,10 @@
+{
+  "train_ctr": 0.6828,
+  "genre_diversity": 3.5954,
+  "arm_coverage": 1.0,
+  "match_rate": 0.1353,
+  "train_steps": 10822,
+  "model_timesteps": 10822,
+  "train_time_s": 108.61,
+  "alpha": 0.1
+}
