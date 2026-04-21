@@ -81,18 +81,18 @@ stages:
       size: 3887
     params:
       params.yaml:
-        train.alpha: 0.5
+        train.alpha: 0.1
         train.pool_size: 20
         train.seed: 42
     outs:
     - path: metrics/train_metrics.json
       hash: md5
-      md5: 82a89650563604b8c4520c7b64c171f7
-      size: 192
-    - path: outputs/linucb_alpha0.5.pkl
+      md5: 8a4ae0018d9546f4d7fbbe2844a4c5c9
+      size: 195
+    - path: outputs/linucb_alpha0.1.pkl
       hash: md5
-      md5: 47b1c1c5a41c0f35a442830d77c0661d
-      size: 98076018
+      md5: 15627193e5ae090370bc20968536bc2b
+      size: 98404922
   evaluate:
     cmd: python src/pipeline/evaluate_stage.py
     deps:
@@ -104,10 +104,10 @@ stages:
       hash: md5
       md5: b48bf8a004f0dced12116d700a5e6700
       size: 131517
-    - path: outputs/linucb_alpha0.5.pkl
+    - path: outputs/linucb_alpha0.1.pkl
       hash: md5
-      md5: 47b1c1c5a41c0f35a442830d77c0661d
-      size: 98076018
+      md5: 15627193e5ae090370bc20968536bc2b
+      size: 98404922
     - path: src/evaluation/metrics.py
       hash: md5
       md5: de7b61ce5e269dd15bf96c38b180cd7b
@@ -118,17 +118,17 @@ stages:
       size: 4452
     params:
       params.yaml:
-        train.alpha: 0.5
+        train.alpha: 0.1
     outs:
     - path: metrics/eval_metrics.json
       hash: md5
-      md5: 683dbf37bf5ce5462597314cce690ad2
-      size: 120
+      md5: c3279fc1a508f83fd81259811f227923
+      size: 122
     - path: plots/test_evaluation.png
       hash: md5
-      md5: 1e4b647c712ffbee7df49590a86f8fc7
-      size: 171115
+      md5: bab883cf475b1aabf066a1029bcb8c39
+      size: 178329
     - path: plots/train_evaluation.png
       hash: md5
-      md5: 5c104d5f8696a5c2f4406423cdb71c2d
-      size: 177923
+      md5: 06e8f02261466583d24d9dd60eeaf07c
+      size: 202779
