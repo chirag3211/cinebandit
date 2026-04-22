@@ -854,8 +854,8 @@ Model    : outputs/linucb_alpha0.1.pkl
 
 ```bash
 # List registered models
-curl -s http://localhost:5000/api/2.0/mlflow/registered-models/list | \
-  python3 -m json.tool | grep -E "name|version|alias"
+curl -s "http://localhost:5000/api/2.0/mlflow/registered-models/search?max_results=10" | \
+python3 -m json.tool | grep -E "name|version|alias"
 ```
 **Output:**
 ```

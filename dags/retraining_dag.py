@@ -56,7 +56,23 @@ def prepare_training_data(**context) -> dict:
       - Data files exist
       - Baseline statistics exist
       - Output directory is writable
+    Also increments the Prometheus retrain counter via FastAPI.
     """
+    # Increment Prometheus retrain counter via API
+    # This ensures Grafana shows retraining triggered from any source
+    try:
+        trigger_reason = context.get("dag_run") and context["dag_run"].conf.get(
+            "reason", "airflow"
+        )
+        requests.post(
+            f"{API_URL}/retrain/trigger",
+            json={"reason": trigger_reason or "airflow"},
+            timeout=5
+        )
+        logging.info("[retrain] Prometheus retrain counter incremented via API")
+    except Exception as e:
+        logging.warning(f"[retrain] Could not update retrain counter: {e}")
+
     errors = []
 
     for fname in ["u.data", "u.item", "u.user"]:
