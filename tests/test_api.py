@@ -35,21 +35,20 @@ def client():
 
 @pytest.fixture(scope="function")
 def client_no_model():
-    """TestClient with explicitly unloaded model — for testing 503 responses."""
+    """TestClient with model marked as not ready — for testing 503 responses."""
     from fastapi.testclient import TestClient
     from src.api.main import app
-    from src.api.core.model_store import ModelStore
-    import src.api.core.model_store as ms
+    from src.api.core import model_store as ms
 
-    # Save original store, replace with empty one
-    original_store = ms.store
-    ms.store = ModelStore()  # fresh unloaded store
+    # Temporarily mark model as not ready without replacing the singleton
+    original_ready = ms.store._ready
+    ms.store._ready = False
 
     client = TestClient(app, raise_server_exceptions=False)
     yield client
 
-    # Restore original store after test
-    ms.store = original_store
+    # Restore ready state after test
+    ms.store._ready = original_ready
 
 
 # ── Health and readiness tests ────────────────────────────────────────────────

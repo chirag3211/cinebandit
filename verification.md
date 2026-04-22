@@ -354,7 +354,7 @@ platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/chirag/min
 cachedir: .pytest_cache
 rootdir: /home/chirag/MLOps/cinebandit
 configfile: pytest.ini
-plugins: anyio-4.13.0, hydra-core-1.3.2
+plugins: anyio-4.13.0, hydra-core-1.3.2, cov-7.1.0
 collected 102 items                                                                                                                                                                                     
 
 tests/test_api.py::TestSystemEndpoints::test_root_returns_200 PASSED                                                                                                                              [  0%]
@@ -366,10 +366,10 @@ tests/test_api.py::TestSystemEndpoints::test_drift_status_default_no_alert PASSE
 tests/test_api.py::TestSystemEndpoints::test_snapshot_structure PASSED                                                                                                                            [  6%]
 tests/test_api.py::TestSystemEndpoints::test_retrain_trigger PASSED                                                                                                                               [  7%]
 tests/test_api.py::TestModelEndpoints::test_model_info_when_loaded PASSED                                                                                                                         [  8%]
-tests/test_api.py::TestModelEndpoints::test_model_info_503_when_not_loaded FAILED                                                                                                                 [  9%]
-tests/test_api.py::TestModelEndpoints::test_ready_503_when_not_loaded FAILED                                                                                                                      [ 10%]
+tests/test_api.py::TestModelEndpoints::test_model_info_503_when_not_loaded PASSED                                                                                                                 [  9%]
+tests/test_api.py::TestModelEndpoints::test_ready_503_when_not_loaded PASSED                                                                                                                      [ 10%]
 tests/test_api.py::TestModelEndpoints::test_model_reload_endpoint_exists PASSED                                                                                                                   [ 11%]
-tests/test_api.py::TestRecommendEndpoint::test_recommend_503_without_model FAILED                                                                                                                 [ 12%]
+tests/test_api.py::TestRecommendEndpoint::test_recommend_503_without_model PASSED                                                                                                                 [ 12%]
 tests/test_api.py::TestRecommendEndpoint::test_recommend_invalid_user PASSED                                                                                                                      [ 13%]
 tests/test_api.py::TestRecommendEndpoint::test_recommend_invalid_payload PASSED                                                                                                                   [ 14%]
 tests/test_api.py::TestRecommendEndpoint::test_recommend_n_out_of_range PASSED                                                                                                                    [ 15%]
@@ -377,7 +377,7 @@ tests/test_api.py::TestRecommendEndpoint::test_recommend_n_zero PASSED          
 tests/test_api.py::TestRecommendEndpoint::test_recommend_response_structure PASSED                                                                                                                [ 17%]
 tests/test_api.py::TestRecommendEndpoint::test_recommend_ucb_scores_positive PASSED                                                                                                               [ 18%]
 tests/test_api.py::TestRecommendEndpoint::test_recommend_exclude_works PASSED                                                                                                                     [ 19%]
-tests/test_api.py::TestFeedbackEndpoint::test_feedback_503_without_model FAILED                                                                                                                   [ 20%]
+tests/test_api.py::TestFeedbackEndpoint::test_feedback_503_without_model PASSED                                                                                                                   [ 20%]
 tests/test_api.py::TestFeedbackEndpoint::test_feedback_invalid_reaction PASSED                                                                                                                    [ 21%]
 tests/test_api.py::TestFeedbackEndpoint::test_feedback_invalid_user PASSED                                                                                                                        [ 22%]
 tests/test_api.py::TestFeedbackEndpoint::test_feedback_invalid_movie PASSED                                                                                                                       [ 23%]
@@ -460,37 +460,7 @@ tests/test_drift.py::TestDriftSimulation::test_simulate_reward_binary PASSED    
 tests/test_drift.py::TestDriftSimulation::test_simulate_phase_zero_no_drift PASSED                                                                                                                [ 99%]
 tests/test_drift.py::TestDriftSimulation::test_simulate_reproducible PASSED                                                                                                                       [100%]
 
-=============================================================================================== FAILURES ================================================================================================
-________________________________________________________________________ TestModelEndpoints.test_model_info_503_when_not_loaded _________________________________________________________________________
-tests/test_api.py:124: in test_model_info_503_when_not_loaded
-    assert r.status_code == 503
-E   assert 200 == 503
-E    +  where 200 = <Response [200 OK]>.status_code
-___________________________________________________________________________ TestModelEndpoints.test_ready_503_when_not_loaded ___________________________________________________________________________
-tests/test_api.py:128: in test_ready_503_when_not_loaded
-    assert r.status_code == 503
-E   assert 200 == 503
-E    +  where 200 = <Response [200 OK]>.status_code
-________________________________________________________________________ TestRecommendEndpoint.test_recommend_503_without_model _________________________________________________________________________
-tests/test_api.py:143: in test_recommend_503_without_model
-    assert r.status_code == 503
-E   assert 200 == 503
-E    +  where 200 = <Response [200 OK]>.status_code
-_________________________________________________________________________ TestFeedbackEndpoint.test_feedback_503_without_model __________________________________________________________________________
-tests/test_api.py:221: in test_feedback_503_without_model
-    assert r.status_code == 503
-E   assert 200 == 503
-E    +  where 200 = <Response [200 OK]>.status_code
-======================================================================================== short test summary info ========================================================================================
-FAILED tests/test_api.py::TestModelEndpoints::test_model_info_503_when_not_loaded - assert 200 == 503
- +  where 200 = <Response [200 OK]>.status_code
-FAILED tests/test_api.py::TestModelEndpoints::test_ready_503_when_not_loaded - assert 200 == 503
- +  where 200 = <Response [200 OK]>.status_code
-FAILED tests/test_api.py::TestRecommendEndpoint::test_recommend_503_without_model - assert 200 == 503
- +  where 200 = <Response [200 OK]>.status_code
-FAILED tests/test_api.py::TestFeedbackEndpoint::test_feedback_503_without_model - assert 200 == 503
- +  where 200 = <Response [200 OK]>.status_code
-===================================================================================== 4 failed, 98 passed in 3.04s ======================================================================================
+========================================================================================== 102 passed in 4.21s ==========================================================================================
 ```
 
 ```bash
@@ -609,21 +579,18 @@ dvc metrics diff
 ```
 **Output:**
 ```
-DVC failed to load some metrics for following revisions: 'HEAD'.
 Path                        Metric           HEAD    workspace    Change
-metrics/train_metrics.json  alpha            -       0.5          -
-metrics/train_metrics.json  arm_coverage     -       1.0          -
-metrics/train_metrics.json  genre_diversity  -       3.5843       -
-metrics/train_metrics.json  match_rate       -       0.036        -
-metrics/train_metrics.json  model_timesteps  -       2882         -
-metrics/train_metrics.json  train_ctr        -       0.6128       -
-metrics/train_metrics.json  train_steps      -       2882         -
-metrics/train_metrics.json  train_time_s     -       114.34       -
-metrics/eval_metrics.json   arm_coverage     -       1.0          -
-metrics/eval_metrics.json   genre_diversity  -       3.638        -
-metrics/eval_metrics.json   test_ctr         -       0.5636       -
-metrics/eval_metrics.json   test_steps       -       1125         -
-metrics/eval_metrics.json   total_reward     -       634          -
+metrics/eval_metrics.json   genre_diversity  3.6213  3.638        0.0167
+metrics/eval_metrics.json   test_ctr         0.6334  0.5636       -0.0698
+metrics/eval_metrics.json   test_steps       2444    1125         -1319
+metrics/eval_metrics.json   total_reward     1548    634          -914
+metrics/train_metrics.json  alpha            0.1     0.5          0.4
+metrics/train_metrics.json  genre_diversity  3.5954  3.5843       -0.0111
+metrics/train_metrics.json  match_rate       0.1353  0.036        -0.0993
+metrics/train_metrics.json  model_timesteps  10822   2882         -7940
+metrics/train_metrics.json  train_ctr        0.6828  0.6128       -0.07
+metrics/train_metrics.json  train_steps      10822   2882         -7940
+metrics/train_metrics.json  train_time_s     108.61  114.34       5.73
 ```
 
 ```bash
@@ -772,11 +739,31 @@ curl http://localhost:8000/drift/status
 
 ```bash
 # Check Prometheus metrics
-curl -s http://localhost:8000/metrics | grep cinebandit | head -20
+curl -sL http://localhost:8000/metrics | grep "^cinebandit" | head -20
 ```
 **Output:**
 ```
-NO OUTPUT RETURNED
+curl -sL http://localhost:8000/metrics | grep "^cinebandit" | head -20
+cinebandit_recommendation_latency_seconds_bucket{le="0.01"} 0.0
+cinebandit_recommendation_latency_seconds_bucket{le="0.025"} 0.0
+cinebandit_recommendation_latency_seconds_bucket{le="0.05"} 0.0
+cinebandit_recommendation_latency_seconds_bucket{le="0.1"} 0.0
+cinebandit_recommendation_latency_seconds_bucket{le="0.2"} 0.0
+cinebandit_recommendation_latency_seconds_bucket{le="0.5"} 0.0
+cinebandit_recommendation_latency_seconds_bucket{le="1.0"} 0.0
+cinebandit_recommendation_latency_seconds_bucket{le="2.0"} 0.0
+cinebandit_recommendation_latency_seconds_bucket{le="+Inf"} 0.0
+cinebandit_recommendation_latency_seconds_count 0.0
+cinebandit_recommendation_latency_seconds_sum 0.0
+cinebandit_recommendation_latency_seconds_created 1.7767425884614804e+09
+cinebandit_model_timesteps 10822.0
+cinebandit_model_alpha 0.1
+cinebandit_arms_seen_total 1682.0
+cinebandit_cumulative_reward_total 0.0
+cinebandit_cumulative_reward_created 1.776742588461765e+09
+cinebandit_rolling_ctr 0.0
+cinebandit_drift_score 0.0
+cinebandit_model_load_time_seconds 2.5796964400000064
 ```
 
 ---
@@ -1095,7 +1082,7 @@ Requests sent — waiting 15s for Prometheus to scrape...
 ```
 
 ```bash
-# Query recommendation request counter from Prometheus
+# Query recommendation request counter
 curl -s "http://localhost:9090/api/v1/query?query=cinebandit_recommendation_requests_total" | \
   python3 -c "
 import sys, json
@@ -1103,18 +1090,19 @@ data = json.load(sys.stdin)
 results = data.get('data', {}).get('result', [])
 if results:
     for r in results:
-        print(f'Labels : {r["metric"]}')
-        print(f'Value  : {r["value"][1]}')
+        labels = r['metric']
+        value  = r['value'][1]
+        print('Labels :', labels)
+        print('Value  :', value)
         print()
 else:
-    print('No data yet — check that API /metrics endpoint is reachable by Prometheus')
+    print('No data yet')
 "
 ```
 **Output:**
 ```
-Traceback (most recent call last):
-  File "<string>", line 7, in <module>
-NameError: name 'metric' is not defined
+Labels : {'__name__': 'cinebandit_recommendation_requests_total', 'instance': 'api:8000', 'job': 'cinebandit_api', 'status': 'success'}
+Value  : 2
 ```
 
 ```bash
@@ -1147,16 +1135,15 @@ import sys, json
 data = json.load(sys.stdin)
 results = data.get('data', {}).get('result', [])
 if results:
-    print(f'Rolling CTR: {results[0]["value"][1]}')
+    val = results[0]['value'][1]
+    print('Rolling CTR:', val)
 else:
     print('No rolling CTR data yet')
 "
 ```
 **Output:**
 ```
-Traceback (most recent call last):
-  File "<string>", line 6, in <module>
-NameError: name 'value' is not defined. Did you mean: 'False'?
+Rolling CTR: 0.6666666666666666
 ```
 
 ```bash
@@ -1167,48 +1154,35 @@ import sys, json
 data = json.load(sys.stdin)
 results = data.get('data', {}).get('result', [])
 if results:
-    print(f'Drift score: {results[0]["value"][1]}')
+    val = results[0]['value'][1]
+    print('Drift score:', val)
 else:
     print('No drift score data yet — trigger drift detection DAG first')
 "
 ```
 **Output:**
 ```
-Traceback (most recent call last):
-  File "<string>", line 6, in <module>
-NameError: name 'value' is not defined. Did you mean: 'False'?
+Drift score: 0
 ```
 
 ```bash
 # Query recommendation latency histogram (p95)
-curl -s "http://localhost:9090/api/v1/query?query=histogram_quantile(0.95,rate(cinebandit_recommendation_latency_seconds_bucket[5m]))" | \
+curl -s "http://localhost:9090/api/v1/query" \
+  --data-urlencode "query=histogram_quantile(0.95,rate(cinebandit_recommendation_latency_seconds_bucket[5m]))" | \
   python3 -c "
 import sys, json
 data = json.load(sys.stdin)
 results = data.get('data', {}).get('result', [])
 if results:
-    latency_ms = float(results[0]['value'][1]) * 1000
-    print(f'p95 latency: {latency_ms:.1f}ms  (target < 200ms)')
+    val = float(results[0]['value'][1]) * 1000
+    print('p95 latency:', round(val, 1), 'ms  (target < 200ms)')
 else:
     print('No latency data yet')
 "
 ```
 **Output:**
 ```
-Traceback (most recent call last):
-  File "<string>", line 3, in <module>
-  File "/home/chirag/miniconda3/envs/cinebandit/lib/python3.12/json/__init__.py", line 293, in load
-    return loads(fp.read(),
-           ^^^^^^^^^^^^^^^^
-  File "/home/chirag/miniconda3/envs/cinebandit/lib/python3.12/json/__init__.py", line 346, in loads
-    return _default_decoder.decode(s)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/chirag/miniconda3/envs/cinebandit/lib/python3.12/json/decoder.py", line 338, in decode
-    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/chirag/miniconda3/envs/cinebandit/lib/python3.12/json/decoder.py", line 356, in raw_decode
-    raise JSONDecodeError("Expecting value", s, err.value) from None
-json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+p95 latency: 24.2 ms  (target < 200ms)
 ```
 
 ---
@@ -1229,29 +1203,35 @@ curl -s http://localhost:3000/api/health | python3 -m json.tool
 ```
 
 ```bash
-# Verify Prometheus datasource is configured and working
+# Prometheus datasource check
 curl -s -u admin:admin \
   "http://localhost:3000/api/datasources" | \
   python3 -c "
 import sys, json
 datasources = json.load(sys.stdin)
 for ds in datasources:
-    print(f'Name   : {ds.get("name")}')
-    print(f'Type   : {ds.get("type")}')
-    print(f'URL    : {ds.get("url")}')
-    print(f'Default: {ds.get("isDefault")}')
+    name    = ds.get('name')
+    dstype  = ds.get('type')
+    url     = ds.get('url')
+    default = ds.get('isDefault')
+    print('Name   :', name)
+    print('Type   :', dstype)
+    print('URL    :', url)
+    print('Default:', default)
     print()
 "
 ```
 **Output:**
 ```
-Traceback (most recent call last):
-  File "<string>", line 5, in <module>
-NameError: name 'name' is not defined
+Name   : Prometheus
+Type   : prometheus
+URL    : http://prometheus:9090
+Default: True
 ```
 
 ```bash
 # Verify CineBandit dashboard is provisioned
+# Dashboard search
 curl -s -u admin:admin \
   "http://localhost:3000/api/search?query=CineBandit" | \
   python3 -c "
@@ -1259,20 +1239,25 @@ import sys, json
 results = json.load(sys.stdin)
 if results:
     for r in results:
-        print(f'Title  : {r.get("title")}')
-        print(f'UID    : {r.get("uid")}')
-        print(f'URL    : {r.get("url")}')
-        print(f'Type   : {r.get("type")}')
+        title = r.get('title')
+        uid   = r.get('uid')
+        url   = r.get('url')
+        rtype = r.get('type')
+        print('Title :', title)
+        print('UID   :', uid)
+        print('URL   :', url)
+        print('Type  :', rtype)
         print()
 else:
-    print('No dashboards found — check grafana/dashboards/cinebandit.json is mounted')
+    print('No dashboards found')
 "
 ```
 **Output:**
 ```
-Traceback (most recent call last):
-  File "<string>", line 6, in <module>
-NameError: name 'title' is not defined. Did you mean: 'tuple'?
+Title : CineBandit — Live Monitoring
+UID   : cinebandit-main
+URL   : /d/cinebandit-main/cinebandit-e28094-live-monitoring
+Type  : dash-db
 ```
 
 ```bash
@@ -1283,57 +1268,74 @@ curl -s -u admin:admin \
 import sys, json
 data = json.load(sys.stdin)
 dashboard = data.get('dashboard', {})
-panels = dashboard.get('panels', [])
-print(f'Dashboard : {dashboard.get("title")}')
-print(f'UID       : {dashboard.get("uid")}')
-print(f'Panels    : {len(panels)}')
+panels    = dashboard.get('panels', [])
+title     = dashboard.get('title')
+uid       = dashboard.get('uid')
+print('Dashboard :', title)
+print('UID       :', uid)
+print('Panels    :', len(panels))
 print()
 print('Panel titles:')
 for p in panels:
-    print(f'  [{p.get("id"):>2}] {p.get("title")}')
+    pid    = p.get('id')
+    ptitle = p.get('title')
+    print('  [' + str(pid).rjust(2) + ']', ptitle)
 "
 ```
 **Output:**
 ```
-Traceback (most recent call last):
-  File "<string>", line 6, in <module>
-NameError: name 'title' is not defined. Did you mean: 'tuple'?
+Dashboard : CineBandit — Live Monitoring
+UID       : cinebandit-main
+Panels    : 11
+
+Panel titles:
+  [ 1] Rolling CTR (last 100 feedbacks)
+  [ 2] Model Timestep (updates)
+  [ 3] Drift Score (KL Divergence)
+  [ 4] Arms Seen (unique movies updated)
+  [ 5] Recommendation Requests/s
+  [ 6] Recommendation Latency (p50 / p95 / p99)
+  [ 7] Feedback Breakdown (likes / dislikes / skips)
+  [ 8] Cumulative Reward
+  [ 9] Retraining Runs
+  [10] API Errors
+  [11] Model Alpha (exploration parameter)
 ```
 
 ```bash
 # Test a live Grafana query against Prometheus datasource
 # (evaluates recommendation requests metric through Grafana)
+DSUID=$(curl -s -u admin:admin "http://localhost:3000/api/datasources" | \
+  python3 -c "import sys,json; ds=json.load(sys.stdin); print(ds[0]['uid'])")
+
+echo "Datasource UID: $DSUID"
+
 curl -s -u admin:admin \
   -H "Content-Type: application/json" \
   -X POST "http://localhost:3000/api/ds/query" \
-  -d '{
-    "queries": [{
-      "refId": "A",
-      "datasource": {"type": "prometheus"},
-      "expr": "cinebandit_recommendation_requests_total",
-      "range": true,
-      "instant": true
-    }],
-    "from": "now-5m",
-    "to": "now"
-  }' | python3 -c "
+  -d "{\"queries\":[{\"refId\":\"A\",\"datasource\":{\"type\":\"prometheus\",\"uid\":\"$DSUID\"},\"expr\":\"cinebandit_recommendation_requests_total\",\"range\":true,\"instant\":true}],\"from\":\"now-5m\",\"to\":\"now\"}" | \
+  python3 -c "
 import sys, json
 data = json.load(sys.stdin)
 results = data.get('results', {}).get('A', {})
-frames = results.get('frames', [])
+frames  = results.get('frames', [])
 if frames:
-    print(f'Query returned {len(frames)} frame(s) — Grafana → Prometheus pipeline working ✅')
+    print('Query returned', len(frames), 'frames — Grafana to Prometheus working')
     for frame in frames:
-        schema = frame.get('schema', {})
-        fields = schema.get('fields', [])
-        print(f'Fields: {[f.get("name") for f in fields]}')
+        fields = frame.get('schema', {}).get('fields', [])
+        names  = [f.get('name') for f in fields]
+        print('Fields:', names)
 else:
-    print('No data returned — check datasource configuration')
-" 2>/dev/null || echo "Grafana query API not available in this version"
+    print('No data — raw response:')
+    print(json.dumps(data, indent=2)[:500])
+"
 ```
 **Output:**
 ```
-No data returned — check datasource configuration
+Datasource UID: PBFA97CFB590B2093
+Query returned 2 frames — Grafana to Prometheus working
+Fields: ['Time', 'cinebandit_recommendation_requests_total']
+Fields: ['Time', 'cinebandit_recommendation_requests_total']
 ```
 
 ---

@@ -134,6 +134,13 @@ def model_reload():
             status_code=500,
             detail="Model reload failed — check logs"
         )
+    # Update Prometheus gauges after reload
+    from src.api.core.metrics import MODEL_VERSION, MODEL_ALPHA, ARMS_SEEN
+    info = store.info
+    MODEL_VERSION.set(info.get("timesteps", 0))
+    MODEL_ALPHA.set(info.get("alpha", 0))
+    ARMS_SEEN.set(info.get("arms_seen", 0))
+
     return {"status": "ok", "message": "Model reloaded successfully",
             "timesteps": store.info.get("timesteps")}
 
