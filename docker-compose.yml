@@ -119,6 +119,9 @@ services:
       - api
     environment:
       API_URL: http://api:8000
+      AIRFLOW_URL: http://airflow-webserver:8080
+      MLFLOW_URL: http://mlflow:5000
+      PROM_URL: http://prometheus:9090
       PYTHONUNBUFFERED: "1"
     networks:
       - cinebandit
@@ -126,7 +129,9 @@ services:
       - "8501:8501"
 
   airflow-init:
-    image: apache/airflow:2.10.0-python3.12
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.airflow
     container_name: cinebandit_airflow_init
     depends_on:
       postgres:
@@ -149,7 +154,9 @@ services:
     restart: "no"
 
   airflow-webserver:
-    image: apache/airflow:2.10.0-python3.12
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.airflow
     container_name: cinebandit_airflow_webserver
     restart: unless-stopped
     depends_on:
@@ -172,7 +179,9 @@ services:
     command: webserver
 
   airflow-scheduler:
-    image: apache/airflow:2.10.0-python3.12
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.airflow
     container_name: cinebandit_airflow_scheduler
     restart: unless-stopped
     depends_on:

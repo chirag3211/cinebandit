@@ -17,9 +17,10 @@ from datetime import datetime
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
-API_URL     = os.environ.get("API_URL", "http://localhost:8000")
-AIRFLOW_URL = os.environ.get("AIRFLOW_URL", "http://localhost:8080")
-MLFLOW_URL  = os.environ.get("MLFLOW_URL", "http://localhost:5000")
+API_URL     = os.environ.get("API_URL", "http://api:8000")
+AIRFLOW_URL = os.environ.get("AIRFLOW_URL", "http://airflow-webserver:8080")
+MLFLOW_URL  = os.environ.get("MLFLOW_URL", "http://mlflow:5000")
+PROM_URL    = os.environ.get("PROM_URL", "http://prometheus:9090")
 
 # Genre emoji map for visual flair
 GENRE_EMOJI = {
@@ -916,7 +917,7 @@ elif page == "📊 Monitoring":
             ("API",        f"{API_URL}/health",   None,            None),
             ("MLflow",     f"{MLFLOW_URL}/health", None,           None),
             ("Airflow",    f"{AIRFLOW_URL}/health", None,          None),
-            ("Prometheus", "http://localhost:9090/-/ready", None,  None),
+            ("Prometheus", f"{PROM_URL}/-/ready", None, None),
         ]
 
         for name, url, user, pwd in services:

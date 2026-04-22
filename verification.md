@@ -859,7 +859,68 @@ curl -s http://localhost:5000/api/2.0/mlflow/registered-models/list | \
 ```
 **Output:**
 ```
-Expecting value: line 1 column 1 (char 0)
+            "name": "CineBandit",
+            "latest_versions": [
+                    "name": "CineBandit",
+                    "version": "2",
+            ],
+            "aliases": [
+                    "alias": "production",
+                    "version": "1"
+            ]
+```
+
+```bash
+# show latest model
+curl -s "http://localhost:5000/api/2.0/mlflow/registered-models/search?max_results=10" | \
+  python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+models = data.get('registered_models', [])
+for m in models:
+    name     = m.get('name')
+    latest   = m.get('latest_versions', [])
+    aliases  = m.get('aliases', [])
+    print('Model   :', name)
+    for v in latest:
+        ver   = v.get('version')
+        stage = v.get('current_stage')
+        run   = v.get('run_id', '')[:8]
+        print('Version :', ver, '| Stage:', stage, '| Run:', run)
+    for a in aliases:
+        print('Alias   :', a.get('alias'), '→ v' + str(a.get('version')))
+    print()
+"
+```
+**Output:**
+```
+Model   : CineBandit
+Version : 2 | Stage: None | Run: 5abcb615
+Alias   : production → v1
+```
+
+```bash
+# Get the production alias directly
+curl -s "http://localhost:5000/api/2.0/mlflow/registered-models/alias?name=CineBandit&alias=production" | \
+  python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+mv = data.get('model_version', {})
+version  = mv.get('version')
+run_id   = mv.get('run_id', '')[:16]
+status   = mv.get('status')
+print('Production model:')
+print('  Version :', version)
+print('  Run ID  :', run_id)
+print('  Status  :', status)
+"
+```
+**Output:**
+```
+Production model:
+  Version : 1
+  Run ID  : e724cd4ab9814780
+  Status  : READY
 ```
 
 ---
@@ -930,8 +991,8 @@ curl -s -u admin:admin \
 **Output:**
 ```
             "dag_id": "cinebandit_ingestion",
-            "execution_date": "2026-04-20T11:32:45.216025+00:00",
-            "state": "queued"
+            "execution_date": "2026-04-22T14:42:56.020922+00:00",
+            "state": "success"
 ```
 
 ```bash
@@ -1162,7 +1223,7 @@ else:
 ```
 **Output:**
 ```
-Drift score: 0
+Drift score: 0.00238696326975188
 ```
 
 ```bash
