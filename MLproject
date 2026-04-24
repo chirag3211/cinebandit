@@ -1,0 +1,58 @@
+name: CineBandit
+
+python_env: python_env.yaml
+
+entry_points:
+
+  main:
+    parameters:
+      alpha:
+        type: float
+        default: 0.1
+        description: "LinUCB exploration parameter"
+      pool_size:
+        type: int
+        default: 20
+        description: "Candidate pool size per step"
+      seed:
+        type: int
+        default: 42
+        description: "Random seed"
+    command: >
+      python train_mlflow.py
+        --alpha {alpha}
+        --pool-size {pool_size}
+        --seed {seed}
+
+  prepare:
+    command: "python src/pipeline/prepare.py"
+
+  train:
+    parameters:
+      alpha:
+        type: float
+        default: 0.1
+      pool_size:
+        type: int
+        default: 20
+      seed:
+        type: int
+        default: 42
+    command: "python src/pipeline/train_stage.py"
+
+  evaluate:
+    parameters:
+      alpha:
+        type: float
+        default: 0.1
+    command: "python src/pipeline/evaluate_stage.py"
+
+  tune:
+    parameters:
+      max_steps:
+        type: int
+        default: 30000
+    command: >
+      python train_mlflow.py
+        --tune-alpha
+        --steps {max_steps}
