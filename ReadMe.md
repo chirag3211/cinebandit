@@ -166,8 +166,7 @@ cinebandit/
 │   ├── test_bandit.py          # 22 tests: LinUCBArm, LinUCB
 │   ├── test_data.py            # 16 tests: loader, context vectors
 │   ├── test_drift.py           # 26 tests: KL divergence, drift detection
-│   ├── test_api.py             # 38 tests: all FastAPI endpoints
-│   └── conftest.py
+│   └── test_api.py             # 38 tests: all FastAPI endpoints
 │
 └── docs/
     ├── HLD.docx                # High-level design document
