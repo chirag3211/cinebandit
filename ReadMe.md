@@ -1,4 +1,5 @@
 # 🎬 CineBandit — Adaptive Movie Recommendation System
+Chirag - DA25M008
 
 > An adaptive movie recommendation system powered by **LinUCB Contextual Bandits**, built with a production-grade **MLOps stack**. The system learns from user feedback in real time, detects preference drift automatically, and retrains itself without human intervention.
 
