@@ -194,7 +194,7 @@ cinebandit/
 ### 1. Clone and set up environment
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/chirag3211/cinebandit.git
 cd cinebandit
 
 conda env create -f environment.yml
