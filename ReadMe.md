@@ -333,11 +333,8 @@ MLFLOW_TRACKING_URI=http://localhost:5000 python train_mlflow.py --tune-alpha --
 ### Algorithm
 
 LinUCB (Disjoint variant) with a **60-dimensional context vector**:
-
-```
-Context = [user_genre_profile (19) | movie_genre (19) | interaction (19) | year | age | gender]
-UCB score = theta^T * x + alpha * sqrt(x^T * A_inv * x)
-```
+- Context = [user_genre_profile (19) | movie_genre (19) | interaction (19) | year | age | gender]
+- UCB score = $\theta ^T * x + alpha * sqrt(x^T * A_{inv} * x)$
 
 Updates use the **Sherman-Morrison formula** for O(d²) incremental matrix inverse updates — no full retraining needed per feedback.
 
